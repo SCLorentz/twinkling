@@ -1,6 +1,6 @@
 (print (+ 1 2))
 
-(princ "ceiling:   ")
+(princ "ceiling: ")
 (write (ceiling 34.34))
 
 (format t "~%Hello, World!~%")

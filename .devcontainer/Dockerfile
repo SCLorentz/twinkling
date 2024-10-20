@@ -2,13 +2,15 @@
 FROM debian:bullseye-slim
 
 RUN apt-get update && \
-    apt-get -y install sbcl curl git
+    apt-get -y install sbcl curl git gcc
 
 RUN curl -o /tmp/ql.lisp http://beta.quicklisp.org/quicklisp.lisp && \
     sbcl --no-sysinit --no-userinit --load /tmp/ql.lisp \
        --eval '(quicklisp-quickstart:install :path "~/.quicklisp")' \
        --eval '(ql:add-to-init-file)' \
        --quit
+
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 
 COPY cmd/.bash /bash
 
