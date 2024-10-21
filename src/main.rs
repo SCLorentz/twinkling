@@ -1,4 +1,32 @@
+extern crate gtk;
 use std::str::Chars;
+
+use gtk::prelude::*;
+use gtk::{Application, ApplicationWindow};
+
+mod ui;
+use ui::*;
+
+fn build_ui() {
+    let app = Application::builder()
+        .application_id("org.example.HelloWorld")
+        .build();
+
+    app.connect_activate(|app| {
+        // We create the main window.
+        let win = ApplicationWindow::builder()
+            .application(app)
+            .default_width(320)
+            .default_height(200)
+            .title("Hello, World!")
+            .build();
+
+        // Don't forget to make all widgets visible.
+        win.show_all();
+    });
+
+    app.run();
+}
 
 #[derive(Debug)]
 enum HtmlNode {
@@ -87,4 +115,6 @@ fn main()
         Ok((html, m)) => println!("text: {:#?}, tag: unknow, remain: {:?}", extract_text(&html), m),
         Err(error) => println!("Erro: {}", error),
     }
+
+    build_ui();
 }
