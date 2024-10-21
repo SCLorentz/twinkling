@@ -1,32 +1,5 @@
-extern crate gtk;
 use std::str::Chars;
 
-use gtk::prelude::*;
-use gtk::{Application, ApplicationWindow};
-
-mod ui;
-use ui::*;
-
-fn build_ui() {
-    let app = Application::builder()
-        .application_id("org.example.HelloWorld")
-        .build();
-
-    app.connect_activate(|app| {
-        // We create the main window.
-        let win = ApplicationWindow::builder()
-            .application(app)
-            .default_width(320)
-            .default_height(200)
-            .title("Hello, World!")
-            .build();
-
-        // Don't forget to make all widgets visible.
-        win.show_all();
-    });
-
-    app.run();
-}
 
 #[derive(Debug)]
 enum HtmlNode {
@@ -40,7 +13,7 @@ enum HtmlNode {
     },
 }
 
-fn expect_value(r#char: char, mut value: Chars<'_>) -> Result<Chars<'_>, String>
+fn expect(r#char: char, mut value: Chars<'_>) -> Result<Chars<'_>, String>
 {
     if value.next() == Some(r#char) {
         Ok(value)
@@ -51,18 +24,18 @@ fn expect_value(r#char: char, mut value: Chars<'_>) -> Result<Chars<'_>, String>
 
 fn begin_tag_struct(mut value: Chars<'_>, tag: char) -> Result<Chars<'_>, String>
 {
-    value = expect_value('<', value)?;
-    value = expect_value(tag, value)?;
-    value = expect_value('>', value)?;
+    value = expect('<', value)?;
+    value = expect(tag, value)?;
+    value = expect('>', value)?;
     Ok(value)
 }
 
 fn end_tag_struct(mut value: Chars<'_>, tag: char) -> Result<Chars<'_>, String>
 {
-    value = expect_value('<', value)?;
-    value = expect_value('/', value)?;
-    value = expect_value(tag, value)?;
-    value = expect_value('>', value)?;
+    value = expect('<', value)?;
+    value = expect('/', value)?;
+    value = expect(tag, value)?;
+    value = expect('>', value)?;
     Ok(value)
 }
 
@@ -93,16 +66,32 @@ fn parse_p_tag(input: &str) -> Result<(HtmlNode, &str), String>
     return Ok((return_value, chars.as_str()))
 }
 
-fn extract_text(node: &HtmlNode) -> String {
-    match node {
+fn extract_text(node: &HtmlNode) -> String
+{
+    match node
+    {
         HtmlNode::Text(text) => text.to_owned(),
-        HtmlNode::Element { children, .. } => {
+        HtmlNode::Element { children, .. } =>
+        {
             let mut result = String::new();
-            for child in children {
-                result += &extract_text(child);
+            for child in children
+            {
+                result = extract_text(child);
             }
             result
         }
+    }
+}
+
+fn extract_html_values(node: &HtmlNode) -> Result<(&String, &Option<Vec<(String, String)>>, &Vec<HtmlNode>), String>
+{
+    match node
+    {
+        HtmlNode::Element { tag, attributes, children } =>
+        {
+            return Ok((tag, attributes, children))
+        }
+        _ => return Err("not a node element!".to_string())
     }
 }
 
@@ -112,9 +101,11 @@ fn main()
     let result = parse_p_tag(html);
 
     match result {
-        Ok((html, m)) => println!("text: {:#?}, tag: unknow, remain: {:?}", extract_text(&html), m),
+        Ok((html, m)) => {
+            let tag = extract_html_values(&html).unwrap().0;
+            //
+            println!("text: {:#?}, tag: {}, remain: {:?}", extract_text(&html), tag, m)
+        },
         Err(error) => println!("Erro: {}", error),
     }
-
-    build_ui();
 }

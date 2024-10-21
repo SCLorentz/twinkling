@@ -2,7 +2,7 @@
 FROM debian:bullseye-slim
 
 RUN apt-get update && \
-    apt-get -y install sbcl curl git gcc pkg-config
+    apt-get -y install sbcl curl git gcc
 
 RUN curl -o /tmp/ql.lisp http://beta.quicklisp.org/quicklisp.lisp && \
     sbcl --no-sysinit --no-userinit --load /tmp/ql.lisp \
