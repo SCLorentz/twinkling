@@ -30,11 +30,7 @@ fn extract_html_values(node: &HtmlNode) -> Result<(&String, &Option<Vec<(String,
     }
 }
 
-fn main()
-{
-    let html = "<p>Olá, mundo!</p><a>ok</a>";
-    let result = parse_html(html);
-
+fn print_result(result: Result<(HtmlNode, &str), String>) {
     match result
     {
         Ok((html, m)) =>
@@ -45,4 +41,15 @@ fn main()
         },
         Err(error) => println!("Erro: {}", error),
     }
+}
+
+fn main()
+{
+    // o ultimo caractere antes do </x> está sendo cortado
+    let html = "<p>Olá, mundo!#</p><a>hello world#</a>";
+    let mut result = parse_html(html);
+    let result2 = parse_html(result.as_mut().unwrap().1);
+
+    print_result(result);
+    print_result(result2);
 }

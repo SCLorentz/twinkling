@@ -44,26 +44,25 @@ fn end_tag_struct(mut value: Chars<'_>, tag: char) -> Result<Chars<'_>, String>
 
 pub fn parse_html(input: &str) -> Result<(HtmlNode, &str), String>
 {
-    let (mut chars, mut content) = (input.chars(), String::new());
+    let mut content = String::new();
+    let (mut chars, tag ) = begin_tag_struct(input.chars())?;
     //
-    let val = begin_tag_struct(chars.to_owned())?;
-    let tag = val.1?;
-    chars = val.0;
     
-    while let Some(char) = chars.next()
+    while let Some(this) = chars.next()
     {
-        let val = end_tag_struct(chars.to_owned(), tag);
+        let val = end_tag_struct(chars.to_owned(), tag?);
         //
-        if val.is_ok() {
+        if val.is_ok()
+        {
             chars = val?;
             break
         }
         //
-        content.push_str(&char.to_string());
+        content.push_str(&this.to_string());
     }
 
     let return_value = HtmlNode::Element {
-        tag: String::from("p"),
+        tag: String::from(tag?),
         attributes: None,
         children: vec![HtmlNode::Text(content)],
     };
