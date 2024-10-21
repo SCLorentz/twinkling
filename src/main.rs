@@ -33,7 +33,7 @@ fn extract_html_values(node: &HtmlNode) -> Result<(&String, &Option<Vec<(String,
 fn main()
 {
     let html = "<p>Olá, mundo!</p><a>ok</a>";
-    let result = parse_p_tag(html);
+    let result = parse_html(html);
 
     match result
     {

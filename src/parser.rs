@@ -19,12 +19,18 @@ fn expect(r#char: char, mut value: Chars<'_>) -> Result<Chars<'_>, String>
     }
 }
 
-fn begin_tag_struct(mut value: Chars<'_>, tag: char) -> Result<Chars<'_>, String>
+fn begin_tag_struct(mut value: Chars<'_>) -> Result<(Chars<'_>, Result<char, &str>), String>
 {
     value = expect('<', value)?;
-    value = expect(tag, value)?;
+    //value = expect(tag, value)?;
+    let tag = match value.next()
+    {
+        Some(c) if c != '>' => Ok(c),
+        _ => return Err("invalid html structure. No element tag found!".to_string())
+    };
+
     value = expect('>', value)?;
-    Ok(value)
+    Ok((value, tag))
 }
 
 fn end_tag_struct(mut value: Chars<'_>, tag: char) -> Result<Chars<'_>, String>
@@ -36,15 +42,17 @@ fn end_tag_struct(mut value: Chars<'_>, tag: char) -> Result<Chars<'_>, String>
     Ok(value)
 }
 
-pub fn parse_p_tag(input: &str) -> Result<(HtmlNode, &str), String>
+pub fn parse_html(input: &str) -> Result<(HtmlNode, &str), String>
 {
     let (mut chars, mut content) = (input.chars(), String::new());
     //
-    chars = begin_tag_struct(chars.to_owned(), 'p')?;
+    let val = begin_tag_struct(chars.to_owned())?;
+    let tag = val.1?;
+    chars = val.0;
     
     while let Some(char) = chars.next()
     {
-        let val = end_tag_struct(chars.to_owned(), 'p');
+        let val = end_tag_struct(chars.to_owned(), tag);
         //
         if val.is_ok() {
             chars = val?;
