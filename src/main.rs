@@ -11,7 +11,7 @@ fn extract_text(node: &HtmlNode) -> String
             let mut result = String::new();
             for child in children
             {
-                result = extract_text(child);
+                result += &extract_text(child);
             }
             result
         }
@@ -30,17 +30,18 @@ fn extract_html_values(node: &HtmlNode) -> Result<(&String, &Option<Vec<(String,
     }
 }
 
-fn print_result(result: Result<(HtmlNode, &str), String>) {
+fn print_result(result: Result<(HtmlNode, &str), String>) -> Result<(), String> {
     match result
     {
         Ok((html, m)) =>
         {
-            let tag = extract_html_values(&html).unwrap().0;
+            let tag = extract_html_values(&html)?.0;
             //
             println!("text: {}, tag: {}, remain: {:?}", extract_text(&html), tag, m)
         },
         Err(error) => println!("Erro: {}", error),
     }
+    Ok(())
 }
 
 fn main()
@@ -50,6 +51,6 @@ fn main()
     let mut result = parse_html(html);
     let result2 = parse_html(result.as_mut().unwrap().1);
 
-    print_result(result);
-    print_result(result2);
+    let _ = print_result(result);
+    let _ = print_result(result2);
 }

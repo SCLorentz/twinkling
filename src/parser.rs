@@ -12,17 +12,17 @@ pub enum HtmlNode {
 
 fn expect(r#char: char, mut value: Chars<'_>) -> Result<Chars<'_>, String>
 {
-    if value.next() == Some(r#char) {
-        Ok(value)
-    } else {
-        Err(format!("missing args: `{}`", r#char).to_string())
+    if value.next() == Some(r#char)
+    {
+        return Ok(value);
     }
+    Err(format!("missing args: `{}`", r#char).to_string())
 }
 
 fn begin_tag_struct(mut value: Chars<'_>) -> Result<(Chars<'_>, Result<char, &str>), String>
 {
     value = expect('<', value)?;
-    //value = expect(tag, value)?;
+    //
     let tag = match value.next()
     {
         Some(c) if c != '>' => Ok(c),
