@@ -47,18 +47,15 @@ pub fn parse_html(input: &str) -> Result<(HtmlNode, &str), String>
     let mut content = String::new();
     let (mut chars, tag ) = begin_tag_struct(input.chars())?;
     //
-    
     while let Some(this) = chars.next()
     {
-        let val = end_tag_struct(chars.to_owned(), tag?);
-        //
-        if val.is_ok()
-        {
-            chars = val?;
-            break
-        }
-        //
+        // thanks gemini! I was stuck on that bug
         content.push_str(&this.to_string());
+
+        if let Ok(remaining_chars) = end_tag_struct(chars.to_owned(), tag?) {
+            chars = remaining_chars;
+            break;
+        }
     }
 
     let return_value = HtmlNode::Element {
