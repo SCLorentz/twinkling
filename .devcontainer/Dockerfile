@@ -2,7 +2,9 @@
 FROM debian:bullseye-slim
 
 RUN apt-get update && \
-    apt-get -y install sbcl curl git gcc
+    apt-get -y install sbcl curl git gcc 
+
+#build-essential libgtk-3-dev
 
 RUN curl -o /tmp/ql.lisp http://beta.quicklisp.org/quicklisp.lisp && \
     sbcl --no-sysinit --no-userinit --load /tmp/ql.lisp \
