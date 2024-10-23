@@ -42,7 +42,7 @@ fn end_tag_struct(mut value: Chars<'_>, tag: char) -> Result<Chars<'_>, String>
     Ok(value)
 }
 
-pub fn parse_html(input: &str) -> Result<(Vec<HtmlNode>, &str), String>
+pub fn parse_html(input: &str) -> Result<Vec<HtmlNode>, String>
 {
     let mut content = String::new();
     let (mut chars, tag ) = begin_tag_struct(input.chars())?;
@@ -68,9 +68,9 @@ pub fn parse_html(input: &str) -> Result<(Vec<HtmlNode>, &str), String>
     val.push(element.clone());
     //
     if chars.as_str().len() > 0 {
-        let mut b = parse_html(chars.as_str())?.0;
+        let mut b = parse_html(chars.as_str())?;
         val.append(&mut b)
     }
 
-    return Ok((val, chars.as_str()))
+    return Ok(val)
 }

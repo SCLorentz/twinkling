@@ -30,29 +30,25 @@ fn extract_html_values(node: &HtmlNode) -> Result<(&String, &Option<Vec<(String,
     }
 }
 
-fn print_result(result: Result<(HtmlNode, &str), String>) -> Result<(), String> {
-    match result
-    {
-        Ok((html, m)) =>
-        {
-            let tag = extract_html_values(&html)?.0;
-            //
-            println!("text: {}, tag: {}, remain: {:?}", extract_text(&html), tag, m)
-        },
-        Err(error) => println!("Erro: {}", error),
-    }
+#[allow(unused)]
+fn print_result(result: HtmlNode) -> Result<(), String> {
+    //
+    let tag = extract_html_values(&result)?.0;
+    //
+    println!("text: {}, tag: {}", extract_text(&result), tag);
+    //
     Ok(())
 }
 
 fn main() -> Result<(), String>
 {
     // o ultimo caractere antes do </x> está sendo cortado
-    let html = "<p>Olá, mundo!</p><a>hello world</a>";
+    let html = "<p>Olá, mundo!</p><a>hello world<p>other</p></a>";
     //
-    let result = parse_html(html);
+    let result = parse_html(html)?;
 
-    //let _ = print_result(result);
-    println!("{:#?}", result);
+    //let _ = print_result(result[1].clone());
+    println!("{:#?}", result[1]);
 
     Ok(())
 }
