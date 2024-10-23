@@ -26,7 +26,7 @@ fn begin_tag_struct(mut value: Chars<'_>) -> Result<(Chars<'_>, Result<char, &st
     let tag = match value.next()
     {
         Some(c) if c != '>' => Ok(c),
-        _ => return Err("invalid html structure. No element tag found!".to_string())
+        _ => return Err("invalid html structure. No element tag found!".to_string()) // Todo: add the pos of the error here
     };
 
     value = expect('>', value)?;
@@ -42,7 +42,7 @@ fn end_tag_struct(mut value: Chars<'_>, tag: char) -> Result<Chars<'_>, String>
     Ok(value)
 }
 
-pub fn parse_html(input: &str) -> Result<(HtmlNode, &str), String>
+pub fn parse_html(input: &str) -> Result<(Vec<HtmlNode>, &str), String>
 {
     let mut content = String::new();
     let (mut chars, tag ) = begin_tag_struct(input.chars())?;
@@ -58,11 +58,19 @@ pub fn parse_html(input: &str) -> Result<(HtmlNode, &str), String>
         }
     }
 
-    let return_value = HtmlNode::Element {
+    let element = HtmlNode::Element {
         tag: String::from(tag?),
         attributes: None,
         children: vec![HtmlNode::Text(content)],
     };
 
-    return Ok((return_value, chars.as_str()))
+    let mut val: Vec<HtmlNode> = Vec::new();
+    val.push(element.clone());
+    //
+    if chars.as_str().len() > 0 {
+        let mut b = parse_html(chars.as_str())?.0;
+        val.append(&mut b)
+    }
+
+    return Ok((val, chars.as_str()))
 }
