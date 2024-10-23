@@ -42,32 +42,41 @@ fn end_tag_struct(mut value: Chars<'_>, tag: char) -> Result<Chars<'_>, String>
     Ok(value)
 }
 
-pub fn parse_html(input: &str) -> Result<Vec<HtmlNode>, String>
+// maybe, if we use a recursive call, we could verify the existence of other html elements inside each other
+fn expect_text<'a>(mut chars: Chars<'a>, content: &'a mut String, tag: char) -> Result<(Chars<'a>, String, char), String>
 {
-    let mut content = String::new();
-    let (mut chars, tag ) = begin_tag_struct(input.chars())?;
-    //
     while let Some(this) = chars.next()
     {
         // thanks gemini! I was stuck on that bug
         content.push_str(&this.to_string());
 
-        if let Ok(remaining_chars) = end_tag_struct(chars.to_owned(), tag?) {
+        if let Ok(remaining_chars) = end_tag_struct(chars.to_owned(), tag) {
             chars = remaining_chars;
             break;
         }
     }
+    Ok((chars, content.to_string(), tag))
+}
 
-    let element = HtmlNode::Element {
-        tag: String::from(tag?),
+pub fn parse_html(input: &str) -> Result<Vec<HtmlNode>, String>
+{
+    let mut content = String::new();
+    let (chars, tag ) = begin_tag_struct(input.chars())?;
+    //
+    let (chars, content, tag) = expect_text(chars, &mut content, tag?)?;
+    //
+    let element = HtmlNode::Element
+    {
+        tag: String::from(tag),
         attributes: None,
-        children: vec![HtmlNode::Text(content)],
+        children: vec![HtmlNode::Text(content.to_string())],
     };
 
     let mut val: Vec<HtmlNode> = Vec::new();
     val.push(element.clone());
     //
-    if chars.as_str().len() > 0 {
+    if chars.as_str().len() > 0
+    {
         let mut b = parse_html(chars.as_str())?;
         val.append(&mut b)
     }

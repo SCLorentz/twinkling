@@ -48,7 +48,7 @@ fn main() -> Result<(), String>
     let result = parse_html(html)?;
 
     //let _ = print_result(result[1].clone());
-    println!("{:#?}", result[1]);
+    println!("{:#?}", result);
 
     Ok(())
 }
