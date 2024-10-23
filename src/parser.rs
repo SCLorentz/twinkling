@@ -1,6 +1,6 @@
 use std::str::Chars;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum HtmlNode {
     Text(String),
     Element {

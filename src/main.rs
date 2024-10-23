@@ -44,13 +44,18 @@ fn print_result(result: Result<(HtmlNode, &str), String>) -> Result<(), String> 
     Ok(())
 }
 
-fn main()
+fn main() -> Result<(), String>
 {
     // o ultimo caractere antes do </x> está sendo cortado
-    let html = "<p>Olá, mundo!#</p><a>hello world#</a>";
-    let mut result = parse_html(html);
-    let result2 = parse_html(result.as_mut().unwrap().1);
+    let html = "<>Olá, mundo!</p><a>hello world</a>";
+    //
+    let result = parse_html(html);
+    let clone: Result<(HtmlNode, &str), String> = Ok(result.clone()?);
+    //
+    let result2 = parse_html(clone?.1);
 
     let _ = print_result(result);
     let _ = print_result(result2);
+
+    Ok(())
 }
