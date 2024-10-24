@@ -50,20 +50,25 @@ fn expect_text<'a>(mut chars: Chars<'a>, content: &'a mut String, tag: char) -> 
         // thanks gemini! I was stuck on that bug
         content.push_str(&this.to_string());
 
-        if let Ok(remaining_chars) = end_tag_struct(chars.to_owned(), tag) {
+        if let Ok(remaining_chars) = end_tag_struct(chars.to_owned(), tag)
+        {
             chars = remaining_chars;
             break;
         }
     }
+    //
     Ok((chars, content.to_string(), tag))
 }
 
 pub fn parse_html(input: &str) -> Result<Vec<HtmlNode>, String>
 {
     let mut content = String::new();
+    // Todo: expect bare text
     let (chars, tag ) = begin_tag_struct(input.chars())?;
     //
     let (chars, content, tag) = expect_text(chars, &mut content, tag?)?;
+    // Todo: parse the content inside the text struct
+    //println!("?> {:?} -> {:?}", content, parse_html(&content.clone().as_str()));
     //
     let element = HtmlNode::Element
     {
