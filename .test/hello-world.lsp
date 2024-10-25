@@ -19,6 +19,8 @@
 (terpri)
 
 (loop
+    (princ "input: ")
+    (force-output)
     (let ((x (read-line)))
         (format t ">> ~2d" x)
         (terpri)

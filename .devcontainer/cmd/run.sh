@@ -1,3 +1,3 @@
 run() {
-    sbcl --script ./src/hello-world.lsp 
+    sbcl --script ./.test/hello-world.lsp 
 }
