@@ -1,4 +1,4 @@
-(format t "~%Hello, World!~%")
+(format t "~%Hello, World!~%~%")
 
 (defun input (value)
     "simplified input system"
@@ -16,9 +16,6 @@
         )
     ))
     ;;
-    (format t "~%Terminal Started!~%")
-    ;;
-    (force-output)
     (loop
         (let ((x (input ">")))
             (if (string= x "ext")
@@ -32,8 +29,8 @@
 
 ;; Browser functions 
 
-;; (get-element "id")                        // get element from ID
-;; (get-elements "class")                    // get list of elements from class
+;; (get-element "id")                       // get element from ID
+;; (get-elements "class")                   // get list of elements from class
 ;; (popup -a "this is an alert!")           // `-a`: 'alert'
 ;; (poupup -c "do you want to proceed?")    // `-c`: 'confirirmation', can be stored as a boolean value
 ;; (popup -p "password:")                   // `-p`: 'promp', can be stored as a string
