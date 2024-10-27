@@ -16,7 +16,7 @@
             (sb-ext:exit :code 1 :abort t)
         )
     ))
-    ;;
+;
     (loop
         (let ((x (input ">")))
             (if (string= x "ext")
@@ -35,3 +35,9 @@
 ;; (popup -a "this is an alert!")           // `-a`: 'alert'
 ;; (poupup -c "do you want to proceed?")    // `-c`: 'confirirmation', can be stored as a boolean value
 ;; (popup -p "password:")                   // `-p`: 'promp', can be stored as a string
+
+;; Functions removal:
+
+;; (princ "content")                        // just use the 'format'
+;; (write "content")                        // just use the 'format'
+;; (read-line)                              // substitute for my 'input'
