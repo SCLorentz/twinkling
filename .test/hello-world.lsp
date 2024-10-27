@@ -1,4 +1,5 @@
-(format t "~%Hello, World!~%~%")
+; I should use a function that simplifies the process of colored messages
+(format t "~%~&~A~&~%" (concatenate 'string (string #\Escape) "[3m" (string #\Escape) "[31m- Hello world!" (string #\Escape) "[0m"))
 
 (defun input (value)
     "simplified input system"
