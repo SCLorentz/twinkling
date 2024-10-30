@@ -16,9 +16,6 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 
 COPY cmd/.bash /bash
 
-COPY cmd/run.sh /
-RUN chmod +x /run.sh
-
 # create bashrc
 RUN touch ~/.bashrc && chmod u+w ~/.bashrc
 # customize bashrc
