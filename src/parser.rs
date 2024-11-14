@@ -1,9 +1,11 @@
 use std::str::Chars;
 
 #[derive(Debug, Clone)]
-pub enum HtmlNode {
+pub enum HtmlNode
+{
     Text(String),
-    Element {
+    Element
+    {
         tag: String,
         attributes: Option<Vec<(String, String)>>,
         children: Vec<HtmlNode>,
@@ -64,7 +66,7 @@ pub fn parse_html(input: &str) -> Result<Vec<HtmlNode>, String>
 {
     let mut content = String::new();
     // Todo: expect bare text
-    let (chars, tag ) = begin_tag_struct(input.chars())?;
+    let (chars, tag) = begin_tag_struct(input.chars())?;
     //
     let (chars, content, tag) = expect_text(chars, &mut content, tag?)?;
     // Todo: parse the content inside the text struct

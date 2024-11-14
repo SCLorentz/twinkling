@@ -2,7 +2,9 @@
 FROM debian:bullseye-slim
 
 RUN apt-get update && \
-    apt-get -y install sbcl curl git gcc 
+    apt-get install -y build-essential git curl sbcl \
+    libgtk-3-dev libcairo2-dev libjpeg-dev libgif-dev \
+    libglib2.0-dev libpango1.0-dev
 
 #build-essential libgtk-3-dev
 
