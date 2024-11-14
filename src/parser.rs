@@ -21,9 +21,17 @@ fn expect(r#char: char, mut value: Chars<'_>) -> Result<Chars<'_>, String>
     Err(format!("missing args: `{}`", r#char).to_string())
 }
 
-fn begin_tag_struct(mut value: Chars<'_>) -> Result<(Chars<'_>, Result<char, &str>), String>
+// Todo: make this better, the process is not complete
+fn begin_tag_struct(mut value: Chars<'_>) -> Result<(Chars<'_>, Result<char, &str>, String), String>
 {
-    value = expect('<', value)?;
+    //value = expect('<', value)?;
+    let mut bare_text = String::new();
+    //
+    while let Some(v) = value.next()
+    {
+        if v == '<' { break }
+        bare_text.push_str(&v.to_string())
+    }
     //
     let tag = match value.next()
     {
@@ -32,7 +40,8 @@ fn begin_tag_struct(mut value: Chars<'_>) -> Result<(Chars<'_>, Result<char, &st
     };
 
     value = expect('>', value)?;
-    Ok((value, tag))
+    //
+    Ok((value, tag, bare_text))
 }
 
 fn end_tag_struct(mut value: Chars<'_>, tag: char) -> Result<Chars<'_>, String>
@@ -66,11 +75,11 @@ pub fn parse_html(input: &str) -> Result<Vec<HtmlNode>, String>
 {
     let mut content = String::new();
     // Todo: expect bare text
-    let (chars, tag) = begin_tag_struct(input.chars())?;
+    let (chars, tag, _) = begin_tag_struct(input.chars())?;
     //
     let (chars, content, tag) = expect_text(chars, &mut content, tag?)?;
     // Todo: parse the content inside the text struct
-    //println!("?> {:?} -> {:?}", content, parse_html(&content.clone().as_str()));
+    println!("?> {:?} -> {:?}", content, parse_html(&content.clone().as_str()));
     //
     let element = HtmlNode::Element
     {

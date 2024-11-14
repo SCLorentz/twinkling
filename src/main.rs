@@ -39,7 +39,7 @@ fn print_result(result: HtmlNode) -> Result<(), String>
 
 fn main() -> Result<(), String>
 {
-    let html = "<p>Olá, mundo!</p><a>hello world<p>other</p></a>";
+    let html = "bare<p>Olá, mundo!</p><a>hello world<p>other</p></a>";
     //
     let result = parse_html(html)?;
 
