@@ -24,7 +24,6 @@ fn expect(r#char: char, mut value: Chars<'_>) -> Result<Chars<'_>, String>
 // Todo: make this better, the process is not complete
 fn begin_tag_struct(mut value: Chars<'_>) -> Result<(Chars<'_>, Result<char, &str>, String), String>
 {
-    //value = expect('<', value)?;
     let mut bare_text = String::new();
     //
     while let Some(v) = value.next()
@@ -79,7 +78,7 @@ pub fn parse_html(input: &str) -> Result<Vec<HtmlNode>, String>
     //
     let (chars, content, tag) = expect_text(chars, &mut content, tag?)?;
     // Todo: parse the content inside the text struct
-    println!("?> {:?} -> {:?}", content, parse_html(&content.clone().as_str()));
+    //println!("?> {:?} -> {:?}", content, parse_html(&content.clone().as_str()));
     //
     let element = HtmlNode::Element
     {
